@@ -2,6 +2,7 @@ class Sudoku {
     constructor() {
         this.grid = Array.from({ length: 9 }, () => Array(9).fill(' '));
         this.solution = Array.from({ length: 9 }, () => Array(9).fill(' ')); // Add a property to store the solution
+        this.mistakes = 0; // Initialize mistakes counter
     }
 
     printSudoku() {
@@ -27,14 +28,25 @@ class Sudoku {
     }
 
     updateCell(row, col, value, inputElement) {
+        const currentValue = this.grid[row][col];
         if (/^[1-9]$/.test(value) || value === '') {
             this.grid[row][col] = value === '' ? ' ' : parseInt(value);
 
             // Check against the solution
             if (this.grid[row][col] !== ' ' && this.grid[row][col] !== this.solution[row][col]) {
                 inputElement.style.color = 'red'; // Highlight incorrect entries in red
+                this.mistakes++;
+                // Check if game over
+                if (this.mistakes >= 3) {
+                    console.log("Game Over - Three Mistakes Made");
+                }
             } else {
                 inputElement.style.color = 'black'; // Reset color if correct
+            }
+
+            // Reset text color to black when user removes number from a blank cell
+            if (currentValue !== ' ' && this.grid[row][col] === ' ') {
+                inputElement.style.color = 'black';
             }
         }
     }
@@ -68,7 +80,7 @@ class Sudoku {
         for (let i = 0; num.length > 0 && i < 9; i++) {
             let index = Math.floor(Math.random() * num.length);
             let val = num.substring(index, index + 1);
-            this.grid[0][i] = val;
+            this.grid[0][i] = parseInt(val);
             num = num.replace(val, '');
         }
 
@@ -77,6 +89,8 @@ class Sudoku {
         console.log("SOLUTION");
         console.log(this.solution);
         this.removeValues(dif);
+        console.log("GRID");
+        console.log(this.grid);
     }
 
     removeValues(dif) {
