@@ -1,6 +1,7 @@
 class Sudoku {
     constructor() {
         this.grid = Array.from({ length: 9 }, () => Array(9).fill(' '));
+        this.solution = Array.from({ length: 9 }, () => Array(9).fill(' ')); // Add a property to store the solution
     }
 
     printSudoku() {
@@ -15,16 +16,26 @@ class Sudoku {
                 input.type = 'text';
                 input.maxLength = 1;
                 input.value = this.grid[i][j] === ' ' ? '' : this.grid[i][j];
-                input.addEventListener('input', (e) => this.updateCell(i, j, e.target.value));
+                if (this.grid[i][j] !== ' ') {
+                    input.disabled = true; // Disable the input if it's part of the initial puzzle
+                }
+                input.addEventListener('input', (e) => this.updateCell(i, j, e.target.value, input));
                 cell.appendChild(input);
                 container.appendChild(cell);
             }
         }
     }
 
-    updateCell(row, col, value) {
+    updateCell(row, col, value, inputElement) {
         if (/^[1-9]$/.test(value) || value === '') {
             this.grid[row][col] = value === '' ? ' ' : parseInt(value);
+
+            // Check against the solution
+            if (this.grid[row][col] !== ' ' && this.grid[row][col] !== this.solution[row][col]) {
+                inputElement.style.color = 'red'; // Highlight incorrect entries in red
+            } else {
+                inputElement.style.color = 'black'; // Reset color if correct
+            }
         }
     }
 
@@ -62,6 +73,9 @@ class Sudoku {
         }
 
         this.solver();
+        this.solution = this.grid.map(row => row.slice()); // Store the solved grid
+        console.log("SOLUTION");
+        console.log(this.solution);
         this.removeValues(dif);
     }
 
