@@ -1,0 +1,101 @@
+class Sudoku {
+    constructor() {
+        this.grid = Array.from({ length: 9 }, () => Array(9).fill(' '));
+    }
+
+    printSudoku() {
+        const container = document.getElementById('sudoku-grid');
+        container.innerHTML = ''; // Clear the grid
+
+        for (let i = 0; i < this.grid.length; i++) {
+            for (let j = 0; j < this.grid[i].length; j++) {
+                const cell = document.createElement('div');
+                cell.classList.add('sudoku-cell');
+                cell.innerText = this.grid[i][j] === ' ' ? '' : this.grid[i][j];
+                container.appendChild(cell);
+            }
+        }
+    }
+
+    rowCheck(val, index) {
+        return this.grid[index].includes(val);
+    }
+
+    colCheck(val, index) {
+        for (let i = 0; i < 9; i++) {
+            if (this.grid[i][index] == val) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    subgrid(val, row, col) {
+        for (let i = Math.floor(row / 3) * 3; i < (Math.floor(row / 3) * 3) + 3; i++) {
+            for (let j = Math.floor(col / 3) * 3; j < (Math.floor(col / 3) * 3) + 3; j++) {
+                if (this.grid[i][j] == val) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    generateSudoku(dif) {
+        let num = "123456789";
+        for (let i = 0; num.length > 0 && i < 9; i++) {
+            let index = Math.floor(Math.random() * num.length);
+            let val = num.substring(index, index + 1);
+            this.grid[0][i] = val;
+            num = num.replace(val, '');
+        }
+
+        this.solver();
+        this.removeValues(dif);
+    }
+
+    removeValues(dif) {
+        for (let i = 0; i < dif; i++) {
+            let row = Math.floor(Math.random() * 9);
+            let col = Math.floor(Math.random() * 9);
+            this.grid[row][col] = ' ';
+        }
+    }
+
+    solver() {
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (this.grid[i][j] == ' ') {
+                    for (let val = 1; val < 10; val++) {
+                        if (!(this.rowCheck(val, i) || this.colCheck(val, j) || this.subgrid(val, i, j))) {
+                            this.grid[i][j] = val;
+                            if (this.solver()) {
+                                return true;
+                            }
+                            this.grid[i][j] = ' ';
+                        }
+                    }
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+
+let sudoku; // Global variable to hold the Sudoku instance
+
+function generateAndDisplaySudoku() {
+    sudoku = new Sudoku();
+    sudoku.generateSudoku(50);
+    sudoku.printSudoku();
+}
+
+function solveAndDisplaySudoku() {
+    if (sudoku) {
+        sudoku.solver();
+        sudoku.printSudoku();
+    } else {
+        console.log("No Sudoku puzzle to solve.");
+    }
+}

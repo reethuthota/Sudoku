@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="sudoku-container">
+        <div id="sudoku-grid" class="sudoku-grid"></div>
+        <div class="buttons">
+            <button onclick="generateAndDisplaySudoku(40)">Easy</button>
+            <button onclick="generateAndDisplaySudoku(34)">Medium</button>
+            <button onclick="generateAndDisplaySudoku(30)">Hard</button>
+            <button onclick="solveAndDisplaySudoku()">Solve Sudoku</button>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
