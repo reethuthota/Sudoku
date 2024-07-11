@@ -11,9 +11,20 @@ class Sudoku {
             for (let j = 0; j < this.grid[i].length; j++) {
                 const cell = document.createElement('div');
                 cell.classList.add('sudoku-cell');
-                cell.innerText = this.grid[i][j] === ' ' ? '' : this.grid[i][j];
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.maxLength = 1;
+                input.value = this.grid[i][j] === ' ' ? '' : this.grid[i][j];
+                input.addEventListener('input', (e) => this.updateCell(i, j, e.target.value));
+                cell.appendChild(input);
                 container.appendChild(cell);
             }
+        }
+    }
+
+    updateCell(row, col, value) {
+        if (/^[1-9]$/.test(value) || value === '') {
+            this.grid[row][col] = value === '' ? ' ' : parseInt(value);
         }
     }
 
@@ -85,9 +96,9 @@ class Sudoku {
 
 let sudoku; // Global variable to hold the Sudoku instance
 
-function generateAndDisplaySudoku() {
+function generateAndDisplaySudoku(difficulty) {
     sudoku = new Sudoku();
-    sudoku.generateSudoku(50);
+    sudoku.generateSudoku(difficulty);
     sudoku.printSudoku();
 }
 

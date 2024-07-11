@@ -46,6 +46,22 @@ body {
     border-bottom: 2px solid #000;
 }
 
+.sudoku-cell:nth-child(n + 1):nth-child(-n + 9),
+.sudoku-cell:nth-child(n + 28):nth-child(-n + 36),
+.sudoku-cell:nth-child(n + 55):nth-child(-n + 63) {
+    border-top: 2px solid #000;
+}
+
+.sudoku-cell input {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
 button {
     padding: 10px 20px;
     margin: 10px;
