@@ -4,28 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sudoku Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="title-page" class="title-page">
         <h1>Sudoku</h1>
-        <button onclick="startGame()">Play Now</button>
+        <button id="start-game" onclick="startGame()">Play Now</button>
     </div>
+
     <div id="game-page" class="game-page" style="display: none;">
         <div class="heading-block">
             <h1>Sudoku</h1>
+            <div id="level-display"></div>
         </div>
+
         <div class="sudoku-container">
-            <div id="mistake-count" style="display: none;"></div> 
+            <div id="mistake-count" style="display: none;"></div>
             <div id="sudoku-grid" class="sudoku-grid"></div>
             <div class="buttons">
-                <button onclick="generateAndDisplaySudoku(40)">New Game</button>
+                <button onclick="startNextLevel()">New Game</button>
                 <button onclick="quitGame()">Quit</button>
             </div>
         </div>
     </div>
 
-    <!-- Game Over Modal -->
     <div id="game-over-modal" class="modal">
         <div class="modal-content">
             <h2>Game Over</h2>
@@ -34,12 +37,19 @@
         </div>
     </div>
 
-    <!-- Congrats Modal -->
     <div id="congrats-modal" class="modal">
         <div class="modal-content">
             <h2>Congratulations!</h2>
             <p>You have solved the puzzle correctly.</p>
-            <button onclick="nextLevel()">Next Level</button>
+            <button id="next-level-button" onclick="nextLevel()">Next Level</button>
+        </div>
+    </div>
+
+    <div id="game-completed-modal" class="modal">
+        <div class="modal-content">
+            <h2>Congratulations!</h2>
+            <p>You have completed all levels!</p>
+            <button onclick="location.reload()">Play Again</button>
         </div>
     </div>
 

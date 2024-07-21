@@ -1,0 +1,7 @@
+{
+    "levels": [
+      {"level": 1, "blanks": 40},
+      {"level": 2, "blanks": 35},
+      {"level": 3, "blanks": 30}
+    ]
+  }

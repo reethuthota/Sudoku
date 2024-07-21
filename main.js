@@ -139,7 +139,6 @@ class Sudoku {
                 this.grid[row][col] = ' ';
                 counter += 1;
             }
-            console.log(counter);
         }
     }
     
@@ -193,11 +192,24 @@ class Sudoku {
 }
 
 let sudoku;
+let levels = [
+    {"level": 1, "blanks": 40},
+    {"level": 2, "blanks": 35},
+    {"level": 3, "blanks": 30}
+  ];
+let currentLevel = 0;
+
+// fetch('levels.json')
+//     .then(response => response.json())
+//     .then(data => {
+//         levels = data.levels;
+//     })
+//     .catch(error => console.error('Error loading levels:', error));
 
 function startGame() {
     document.getElementById('title-page').style.display = 'none';
     document.getElementById('game-page').style.display = 'block';
-    generateAndDisplaySudoku(40);
+    startNextLevel();
 }
 
 function generateAndDisplaySudoku(difficulty) {
@@ -209,20 +221,79 @@ function generateAndDisplaySudoku(difficulty) {
 function quitGame() {
     if (sudoku) {
         sudoku.calculateScore(false);
-        sudoku.printSudoku();
-    } else {
-        console.log("No Sudoku puzzle to solve.");
     }
+    
+    // Hide the game page
+    document.getElementById('game-page').style.display = 'none';
+    
+    // Show the title page
+    document.getElementById('title-page').style.display = 'block';
+    
+    // Reset the current level to 0
+    currentLevel = 0;
+    
+    // Reset the Sudoku grid (optional, but recommended)
+    const container = document.getElementById('sudoku-grid');
+    container.innerHTML = '';
+    
+    // Hide the mistake count
+    document.getElementById('mistake-count').style.display = 'none';
+    
+    // Reset the sudoku object (optional, but recommended)
+    sudoku = null;
+}
+
+function showCongrats() {
+    if (currentLevel < levels.length) {
+        const modal = document.getElementById('congrats-modal');
+        modal.style.display = 'flex';
+        this.calculateScore(true);
+
+        const nextLevelButton = document.getElementById('next-level-button');
+        nextLevelButton.style.display = 'block';
+        nextLevelButton.textContent = 'Next Level';
+    } else {
+        showGameCompleted();
+    }
+}
+
+function nextLevel() {
+    const congratsModal = document.getElementById('congrats-modal');
+    congratsModal.style.display = 'none';
+    startNextLevel();
+}
+
+function startNextLevel() {
+    if (currentLevel < levels.length) {
+        const level = levels[currentLevel];
+        document.getElementById('level-display').textContent = `Level ${level.level}`;
+        generateAndDisplaySudoku(level.blanks);
+        currentLevel++;
+    } else {
+        showGameCompleted();
+    }
+}
+
+function showGameCompleted() {
+    const modal = document.getElementById('game-completed-modal');
+    modal.style.display = 'flex';
+    this.calculateScore(true);
 }
 
 function restartGame() {
     const modal = document.getElementById('game-over-modal');
     modal.style.display = 'none';
-    generateAndDisplaySudoku(40);
-}
-
-function nextLevel() {
-    const modal = document.getElementById('congrats-modal');
-    modal.style.display = 'none';
-    generateAndDisplaySudoku(30); // Increase the difficulty by reducing the number of clues
+    
+    // Ensure we're not going out of bounds
+    let levelIndex = Math.max(0, currentLevel - 1);
+    const currentLevelData = levels[levelIndex];
+    
+    // Reset mistakes count
+    sudoku.mistakes = 0;
+    
+    // Regenerate the Sudoku for the current level
+    generateAndDisplaySudoku(currentLevelData.blanks);
+    
+    // Update the level display
+    document.getElementById('level-display').textContent = `Level ${currentLevelData.level}`;
 }

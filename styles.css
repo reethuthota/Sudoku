@@ -33,6 +33,21 @@ body {
     border-radius: 5px;
 }
 
+#level-display {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+#start-game {
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    background-color: #59a0b2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+}
+
 .heading-block {
     margin-bottom: 20px;
 }
