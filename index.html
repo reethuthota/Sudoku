@@ -7,13 +7,27 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="heading-block">
+        <h1>Sudoku</h1>
+    </div>
     <div class="sudoku-container">
+        <div id="mistake-count" style="display: none;"></div> 
         <div id="sudoku-grid" class="sudoku-grid"></div>
         <div class="buttons">
             <button onclick="generateAndDisplaySudoku(40)">New Game</button>
             <button onclick="solveAndDisplaySudoku()">Solve Game</button>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <h2>Game Over</h2>
+            <p>You have made too many mistakes.</p>
+            <button onclick="restartGame()">Try Again</button>
+        </div>
+    </div>
+
     <script src="main.js"></script>
 </body>
 </html>

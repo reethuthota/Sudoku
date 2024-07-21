@@ -1,8 +1,8 @@
 class Sudoku {
     constructor() {
         this.grid = Array.from({ length: 9 }, () => Array(9).fill(' '));
-        this.solution = Array.from({ length: 9 }, () => Array(9).fill(' ')); // Add a property to store the solution
-        this.mistakes = 0; // Initialize mistakes counter
+        this.solution = Array.from({ length: 9 }, () => Array(9).fill(' '));
+        this.mistakes = 0;
     }
 
     printSudoku() {
@@ -20,10 +20,22 @@ class Sudoku {
                 if (this.grid[i][j] !== ' ') {
                     input.disabled = true; // Disable the input if it's part of the initial puzzle
                 }
+                input.addEventListener('keypress', (e) => this.validateInput(e));
                 input.addEventListener('input', (e) => this.updateCell(i, j, e.target.value, input));
                 cell.appendChild(input);
                 container.appendChild(cell);
             }
+        }
+
+        // Make the mistake count element visible
+        document.getElementById('mistake-count').style.display = 'block';
+        this.updateMistakeCount();
+    }
+
+    validateInput(event) {
+        const key = event.key;
+        if (!/^[1-9]$/.test(key)) {
+            event.preventDefault();
         }
     }
 
@@ -36,9 +48,10 @@ class Sudoku {
             if (this.grid[row][col] !== ' ' && this.grid[row][col] !== this.solution[row][col]) {
                 inputElement.style.color = 'red'; // Highlight incorrect entries in red
                 this.mistakes++;
+                this.updateMistakeCount();
                 // Check if game over
                 if (this.mistakes >= 3) {
-                    console.log("Game Over - Three Mistakes Made");
+                    this.showGameOver();
                 }
             } else {
                 inputElement.style.color = 'black'; // Reset color if correct
@@ -48,7 +61,19 @@ class Sudoku {
             if (currentValue !== ' ' && this.grid[row][col] === ' ') {
                 inputElement.style.color = 'black';
             }
+        } else {
+            inputElement.value = currentValue === ' ' ? '' : currentValue;
         }
+    }
+
+    updateMistakeCount() {
+        const mistakeCountElement = document.getElementById('mistake-count');
+        mistakeCountElement.textContent = `Mistakes: ${this.mistakes}`;
+    }
+
+    showGameOver() {
+        const modal = document.getElementById('game-over-modal');
+        modal.style.display = 'flex';
     }
 
     rowCheck(val, index) {
@@ -122,7 +147,7 @@ class Sudoku {
     }
 }
 
-let sudoku; // Global variable to hold the Sudoku instance
+let sudoku;
 
 function generateAndDisplaySudoku(difficulty) {
     sudoku = new Sudoku();
@@ -137,4 +162,10 @@ function solveAndDisplaySudoku() {
     } else {
         console.log("No Sudoku puzzle to solve.");
     }
+}
+
+function restartGame() {
+    const modal = document.getElementById('game-over-modal');
+    modal.style.display = 'none';
+    generateAndDisplaySudoku(40);
 }
