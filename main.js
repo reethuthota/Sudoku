@@ -3,6 +3,7 @@ class Sudoku {
         this.grid = Array.from({ length: 9 }, () => Array(9).fill(' '));
         this.solution = Array.from({ length: 9 }, () => Array(9).fill(' '));
         this.mistakes = 0;
+        this.difficulty = 0;
     }
 
     printSudoku() {
@@ -55,6 +56,7 @@ class Sudoku {
                 }
             } else {
                 inputElement.style.color = 'black'; // Reset color if correct
+                this.checkIfSolved(); // Check if the puzzle is solved correctly
             }
 
             // Reset text color to black when user removes number from a blank cell
@@ -74,6 +76,13 @@ class Sudoku {
     showGameOver() {
         const modal = document.getElementById('game-over-modal');
         modal.style.display = 'flex';
+        this.calculateScore(false);
+    }
+
+    showCongrats() {
+        const modal = document.getElementById('congrats-modal');
+        modal.style.display = 'flex';
+        this.calculateScore(true);
     }
 
     rowCheck(val, index) {
@@ -101,6 +110,7 @@ class Sudoku {
     }
 
     generateSudoku(dif) {
+        this.difficulty = dif;
         let num = "123456789";
         for (let i = 0; num.length > 0 && i < 9; i++) {
             let index = Math.floor(Math.random() * num.length);
@@ -119,12 +129,20 @@ class Sudoku {
     }
 
     removeValues(dif) {
-        for (let i = 0; i < dif; i++) {
+        let counter = 0;
+        while (counter < dif) {
             let row = Math.floor(Math.random() * 9);
             let col = Math.floor(Math.random() * 9);
-            this.grid[row][col] = ' ';
+            
+            // Check if the cell is not blank before setting it to blank
+            if (this.grid[row][col] !== ' ') {
+                this.grid[row][col] = ' ';
+                counter += 1;
+            }
+            console.log(counter);
         }
     }
+    
 
     solver() {
         for (let i = 0; i < 9; i++) {
@@ -145,9 +163,42 @@ class Sudoku {
         }
         return true;
     }
+
+    checkIfSolved() {
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                if (this.grid[i][j] === ' ' || this.grid[i][j] !== this.solution[i][j]) {
+                    return false;
+                }
+            }
+        }
+        this.showCongrats();
+        return true;
+    }
+
+    calculateScore(isSolved) {
+        let score = 0;
+        if (isSolved) {
+            score = 100;
+            console.log("Congratulations! You've completed the puzzle. Score: " + score);
+        } else {
+            const totalBlanks = this.difficulty;
+            console.log("Total blanks: " + totalBlanks)
+            const filledCorrectly = ((this.grid.flat().filter((cell, index) => cell !== ' ' && cell === this.solution[Math.floor(index / 9)][index % 9]).length) - (81 - totalBlanks));
+            console.log("filledCorrectly: " + filledCorrectly)
+            score = (100 / totalBlanks) * filledCorrectly;
+            console.log("Game interrupted. Score: " + score);
+        }
+    }
 }
 
 let sudoku;
+
+function startGame() {
+    document.getElementById('title-page').style.display = 'none';
+    document.getElementById('game-page').style.display = 'block';
+    generateAndDisplaySudoku(40);
+}
 
 function generateAndDisplaySudoku(difficulty) {
     sudoku = new Sudoku();
@@ -155,9 +206,9 @@ function generateAndDisplaySudoku(difficulty) {
     sudoku.printSudoku();
 }
 
-function solveAndDisplaySudoku() {
+function quitGame() {
     if (sudoku) {
-        sudoku.solver();
+        sudoku.calculateScore(false);
         sudoku.printSudoku();
     } else {
         console.log("No Sudoku puzzle to solve.");
@@ -168,4 +219,10 @@ function restartGame() {
     const modal = document.getElementById('game-over-modal');
     modal.style.display = 'none';
     generateAndDisplaySudoku(40);
+}
+
+function nextLevel() {
+    const modal = document.getElementById('congrats-modal');
+    modal.style.display = 'none';
+    generateAndDisplaySudoku(30); // Increase the difficulty by reducing the number of clues
 }

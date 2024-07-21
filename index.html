@@ -7,24 +7,39 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="heading-block">
+    <div id="title-page" class="title-page">
         <h1>Sudoku</h1>
+        <button onclick="startGame()">Play Now</button>
     </div>
-    <div class="sudoku-container">
-        <div id="mistake-count" style="display: none;"></div> 
-        <div id="sudoku-grid" class="sudoku-grid"></div>
-        <div class="buttons">
-            <button onclick="generateAndDisplaySudoku(40)">New Game</button>
-            <button onclick="solveAndDisplaySudoku()">Solve Game</button>
+    <div id="game-page" class="game-page" style="display: none;">
+        <div class="heading-block">
+            <h1>Sudoku</h1>
+        </div>
+        <div class="sudoku-container">
+            <div id="mistake-count" style="display: none;"></div> 
+            <div id="sudoku-grid" class="sudoku-grid"></div>
+            <div class="buttons">
+                <button onclick="generateAndDisplaySudoku(40)">New Game</button>
+                <button onclick="quitGame()">Quit</button>
+            </div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Game Over Modal -->
     <div id="game-over-modal" class="modal">
         <div class="modal-content">
             <h2>Game Over</h2>
             <p>You have made too many mistakes.</p>
             <button onclick="restartGame()">Try Again</button>
+        </div>
+    </div>
+
+    <!-- Congrats Modal -->
+    <div id="congrats-modal" class="modal">
+        <div class="modal-content">
+            <h2>Congratulations!</h2>
+            <p>You have solved the puzzle correctly.</p>
+            <button onclick="nextLevel()">Next Level</button>
         </div>
     </div>
 
