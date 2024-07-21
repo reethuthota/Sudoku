@@ -194,8 +194,8 @@ class Sudoku {
 let sudoku;
 let levels = [
     {"level": 1, "blanks": 40},
-    {"level": 2, "blanks": 35},
-    {"level": 3, "blanks": 30}
+    {"level": 2, "blanks": 45},
+    {"level": 3, "blanks": 50}
   ];
 let currentLevel = 0;
 
